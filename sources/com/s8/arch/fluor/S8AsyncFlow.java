@@ -1,5 +1,7 @@
 package com.s8.arch.fluor;
 
+import java.util.List;
+
 /**
  * 
  * @author pierreconvert
@@ -27,6 +29,36 @@ public interface S8AsyncFlow {
 	 * @param runnable
 	 */
 	public abstract S8AsyncFlow then(int force, S8CodeBlock runnable);
+	
+
+	public abstract S8User getMe();
+	
+	
+	/**
+	 * 
+	 * @param username
+	 * @param user
+	 * @param onException
+	 */
+	public abstract void getUser(String username, S8ResultProcessor<S8User> user, S8ExceptionCatcher onException);
+	
+	
+	/**
+	 * 
+	 * @param user
+	 * @param onException
+	 */
+	public abstract void scanUsers(S8Filter<S8User> filter, S8ResultProcessor<List<S8User>> user, S8ExceptionCatcher onException);
+	
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public default String getMySpaceId() {
+		return getMe().getPersonalSpaceId();
+	}
 	
 	
 	
