@@ -3,7 +3,7 @@
 	
 	<property name="module" value="com.s8.arch.fluor" />
 	<property name="stack" value="/Users/pc/qx/git/com.s8.stack/modules" />
-	<property name="stack-sources" value="/Users/pc/qx/git/com.s8.stack/mod-sources" />
+	<property name="java-sources" value="/Users/pc/qx/git/com.s8.stack/mod-sources" />
 	<property name="jar-name" value="${stack}/s8-arch-fluor" />
 	<property name="dependencies" value="" />
 	<property name="version" value="1.1.1" />
@@ -11,11 +11,11 @@
 
 	<target name="clean-up">
 		<delete dir="forge" />
-		<delete dir="${stack-sources}/${module}" />
+		<delete dir="${java-sources}/${module}" />
 		<mkdir dir="forge" />
 		<mkdir dir="forge/java" />
 		<mkdir dir="forge/java/${module}" />
-		<mkdir dir="${stack-sources}/${module}" />
+		<mkdir dir="${java-sources}/${module}" />
 	</target>
 
 	<target name="copy-sources" depends="clean-up">
@@ -24,7 +24,7 @@
 				<exclude name="**/*.toto" />
 			</fileset>
 		</copy>
-		<copy todir="${stack-sources}/${module}">
+		<copy todir="${java-sources}/${module}">
 			<fileset dir="sources">
 				<exclude name="**/*.toto" />
 			</fileset>
