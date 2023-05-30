@@ -6,7 +6,7 @@ package com.s8.arch.fluor;
  * @author pierreconvert
  *
  */
-public interface S8ResultProcessor<T> {
+public interface S8OutputProcessor<T> {
 
 	
 	/**
