@@ -11,7 +11,7 @@ public class GetUserS8AsyncOutput extends S8AsyncOutput {
 
 	
 	
-	public boolean isUserDefined = true;
+	public boolean isUserDefined = false;
 	
 	/**
 	 * 
