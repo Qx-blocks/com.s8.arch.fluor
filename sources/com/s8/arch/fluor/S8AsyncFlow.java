@@ -22,7 +22,9 @@ public interface S8AsyncFlow {
 	
 	public final static long CREATE_SPACE_IF_NOT_PRESENT = Bool64.BIT02;
 	
-	public final static long SAVE_IMMEDIATELY_AFTER = Bool64.BIT08;
+	public final static long SAVE_IMMEDIATELY_AFTER = Bool64.BIT03;
+	
+	public final static long SHOULD_NOT_OVERRIDE = Bool64.BIT04;
 
 
 	public abstract S8User getMe();
