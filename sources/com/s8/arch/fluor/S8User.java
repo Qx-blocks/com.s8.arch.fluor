@@ -4,7 +4,7 @@ public interface S8User {
 
 	
 	/**
-	 * 
+	 * ID of the user
 	 * @return
 	 */
 	public String getUsername();

@@ -1,12 +1,12 @@
 package com.s8.arch.fluor;
 
+import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
+import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
+import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.fluor.outputs.GetUserS8AsyncOutput;
 import com.s8.arch.fluor.outputs.ObjectsListS8AsyncOutput;
 import com.s8.arch.fluor.outputs.PutUserS8AsyncOutput;
 import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
 import com.s8.io.bytes.alpha.Bool64;
@@ -25,6 +25,8 @@ public interface S8AsyncFlow {
 	public final static long SAVE_IMMEDIATELY_AFTER = Bool64.BIT03;
 	
 	public final static long SHOULD_NOT_OVERRIDE = Bool64.BIT04;
+	
+	public final static long HEAD_VERSION = -0x62L;
 
 
 	public abstract S8User getMe();
@@ -228,25 +230,46 @@ public interface S8AsyncFlow {
 
 
 	/**
-	 * 
+	 * Note that:
+	 * - initiator will become owner of the repository
+	 * - initiator will become owner of the main branch
 	 * @param pre
 	 * @param post
 	 * @return 
 	 */
-	public abstract S8AsyncFlow createRepository(String repositoryAddress, 
+	public abstract S8AsyncFlow createRepository(
+			String repositoryAddress, String repositoryInfo, 
+			String mainBranchName,
+			Object[] objects, String initialCommitComment,
 			S8OutputProcessor<RepoCreationS8AsyncOutput> onCommitted, long options);
 	
 	
 	
 
+
 	/**
 	 * 
 	 * @param pre
 	 * @param post
 	 * @return 
 	 */
-	public abstract S8AsyncFlow createBranch(String repositoryAddress, String branchId, 
-			S8OutputProcessor<BranchCreationS8AsyncOutput> onCommitted, long options);
+	public abstract S8AsyncFlow forkRepository(
+			String originRepositoryAddress, 
+			String originBranchId, long originBranchVersion,
+			String targetRepositoryAddress, 
+			S8OutputProcessor<BranchCreationS8AsyncOutput> onForked, long options);
+	
+	
+	
+	/**
+	 * 
+	 * @param pre
+	 * @param post
+	 * @return 
+	 */
+	public abstract S8AsyncFlow forkBranch(String repositoryAddress, 
+			String originBranchId, long originBranchVersion, String targetBranchId, 
+			S8OutputProcessor<BranchCreationS8AsyncOutput> onForked, long options);
 	
 
 	
@@ -258,7 +281,8 @@ public interface S8AsyncFlow {
 	 * @param post
 	 * @return 
 	 */
-	public abstract S8AsyncFlow commit(String repositoryAddress, String branchId, Object[] objects,
+	public abstract S8AsyncFlow commitBranch(String repositoryAddress, String branchId, 
+			Object[] objects, String author, String comment,
 			S8OutputProcessor<BranchVersionS8AsyncOutput> onCommitted, long options);
 	
 	
@@ -268,9 +292,10 @@ public interface S8AsyncFlow {
 	 * @param post
 	 * @return 
 	 */
-	public default S8AsyncFlow commit(String repositoryAddress, String branchId, Object[] objects,
+	public default S8AsyncFlow commitBranch(String repositoryAddress, String branchId, 
+			Object[] objects, String author, String comment,
 			S8OutputProcessor<BranchVersionS8AsyncOutput> onCommitted) {
-		return commit(repositoryAddress, branchId, objects, onCommitted, 0x0L);
+		return commitBranch(repositoryAddress, branchId, objects, author, comment, onCommitted, 0x0L);
 	}
 
 
@@ -279,8 +304,10 @@ public interface S8AsyncFlow {
 	 * @param pre
 	 * @param post
 	 */
-	public abstract S8AsyncFlow cloneHead(String repositoryAddress, String branchId, 
-			S8OutputProcessor<BranchExposureS8AsyncOutput> onCloned, long options);
+	public default S8AsyncFlow cloneBranchHead(String repositoryAddress, String branchId, 
+			S8OutputProcessor<BranchExposureS8AsyncOutput> onCloned, long options) {
+		return cloneBranch(repositoryAddress, branchId, HEAD_VERSION, onCloned, options);
+	}
 	
 	
 	/**
@@ -288,9 +315,9 @@ public interface S8AsyncFlow {
 	 * @param pre
 	 * @param post
 	 */
-	public default S8AsyncFlow cloneHead(String repositoryAddress, String branchId, 
+	public default S8AsyncFlow cloneBranchHead(String repositoryAddress, String branchId, 
 			S8OutputProcessor<BranchExposureS8AsyncOutput> onCloned) {
-		return cloneHead(repositoryAddress, branchId, onCloned, 0x0L);
+		return cloneBranch(repositoryAddress, branchId, HEAD_VERSION, onCloned, 0x0L);
 	}
 
 
@@ -300,7 +327,7 @@ public interface S8AsyncFlow {
 	 * @param pre
 	 * @param post
 	 */
-	public abstract S8AsyncFlow cloneVersion(String repositoryAddress, String branchId, long version,
+	public abstract S8AsyncFlow cloneBranch(String repositoryAddress, String branchId, long version,
 			S8OutputProcessor<BranchExposureS8AsyncOutput> onCloned, long options);
 
 	
@@ -309,9 +336,9 @@ public interface S8AsyncFlow {
 	 * @param pre
 	 * @param post
 	 */
-	public default S8AsyncFlow cloneVersion(String repositoryAddress, String branchId, long version,
+	public default S8AsyncFlow cloneBranch(String repositoryAddress, String branchId, long version,
 			S8OutputProcessor<BranchExposureS8AsyncOutput> onCloned) {
-		return cloneVersion(repositoryAddress, branchId, version, onCloned, 0x0L);
+		return cloneBranch(repositoryAddress, branchId, version, onCloned, 0x0L);
 	}
 
 
