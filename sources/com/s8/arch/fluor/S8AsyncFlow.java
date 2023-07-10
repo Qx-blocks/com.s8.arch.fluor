@@ -7,6 +7,7 @@ import com.s8.arch.fluor.outputs.GetUserS8AsyncOutput;
 import com.s8.arch.fluor.outputs.ObjectsListS8AsyncOutput;
 import com.s8.arch.fluor.outputs.PutUserS8AsyncOutput;
 import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
+import com.s8.arch.fluor.outputs.RepositoryMetadataS8AsyncOutput;
 import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
 import com.s8.io.bytes.alpha.Bool64;
@@ -238,13 +239,23 @@ public interface S8AsyncFlow {
 	 * @return 
 	 */
 	public abstract S8AsyncFlow createRepository(
-			String repositoryAddress, String repositoryInfo, 
+			String repositoryName, 
+			String repositoryAddress, 
+			String repositoryInfo, 
 			String mainBranchName,
 			Object[] objects, String initialCommitComment,
 			S8OutputProcessor<RepoCreationS8AsyncOutput> onCommitted, long options);
 	
 	
-	
+	/**
+	 * 
+	 * @param pre
+	 * @param post
+	 * @return 
+	 */
+	public abstract S8AsyncFlow getRepositoryMetadata(
+			String repositoryAddress, 
+			S8OutputProcessor<RepositoryMetadataS8AsyncOutput> onForked, long options);
 
 
 	/**
